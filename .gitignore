@@ -2,10 +2,10 @@ pom.xml
 *jar
 /lib/
 /classes/
-/out-adv/
-/out
+/node_modules/
+/resources/public/out
 /target/
 .lein-deps-sum
 .lein-repl-history
 .lein-plugins/
-gh-pages
+figwheel_server.log

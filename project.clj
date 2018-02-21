@@ -4,36 +4,63 @@
 
   :exclusions [cljsjs/react cljsjs/react-dom cljsjs/react-dom-server]
 
-  :dependencies [[org.clojure/clojure "1.8.0"]
-                 [org.clojure/clojurescript "1.9.293"]
-                 [org.clojure/core.async "0.1.346.0-17112a-alpha"]
-                 [reagent "0.6.1-SNAPSHOT"]
-                 [figwheel "0.3.3"]
+  :dependencies [[org.clojure/clojure "1.9.0"]
+                 [org.clojure/clojurescript "1.9.946"]
+                 [reagent "0.8.0-alpha2"]]
 
-                 [cljsjs/preact "7.1.0-0"]
-                 [cljsjs/preact-compat "3.9.4-0"]
-                 ]
-
-  :plugins [[lein-figwheel "0.5.8"]
-            [lein-cljsbuild "1.1.5"]]
+  :plugins [[lein-figwheel "0.5.14"]
+            [lein-cljsbuild "1.1.7"]]
 
   :source-paths ["src" "target/classes"]
 
-  :figwheel {:repl false
-             :http-server-root "public"
+  :figwheel {:http-server-root "public"
              :server-port 3451}
 
   :resource-paths ["out" "resources"]
 
-  :cljsbuild {:builds {:dev {:figwheel true
-                             :source-paths ["src"]
-                             :compiler {:main "hello-world.core"
-                                        :output-to "out/public/main.js"
-                                        :asset-path ""
-                                        :output-dir "out/public"}}
-                       :gh-pages {:source-paths ["src"]
-                                  :compiler {:optimizations :advanced
-                                             :main "hello-world.core"
-                                             :asset-path "/problems/reagent-preact/out"
-                                             :output-to "gh-pages/reagent-preact/main.js"
-                                             :output-dir "gh-pages/reagent-preact/out"}}}})
+  :cljsbuild {:builds
+              {:dev
+               {:figwheel true
+                :source-paths ["src"]
+                :compiler {:main "hello-world.core"
+                           :output-to "resources/public/out/js/main.js"
+                           :asset-path "out/js"
+                           :output-dir "resources/public/out/js/"
+                           :foreign-libs
+                           [{:file "./node_modules/preact/dist/preact.js"
+                             :file-min "./node_modules/preact/dist/preact.min.js"
+                             :provides ["preact"]}
+                            {:file "./node_modules/prop-types/prop-types.js"
+                             :file-min "./node_modules/prop-types/prop-types.min.js"
+                             :provides ["prop-types"]}
+                            {:file "./node_modules/preact-compat/dist/preact-compat.js"
+                             :file-min "./node_modules/preact-compat/dist/preact-compat.min.js"
+                             :requires ["preact" "prop-types"]
+                             :provides ["react" "react-dom" "create-react-class"]
+                             :global-exports {create-react-class preactCompat.createClass
+                                              react-dom preactCompat
+                                              react preactCompat}}]}}
+               :prd
+               {:source-paths ["src"]
+                :compiler {:main "hello-world.core"
+                           :optimizations :advanced
+                           :pretty-print false
+                           :pseudo-names false
+                           :output-to "resources/public/out/min/js/main.js"
+                           :asset-path "out/min/js"
+                           :output-dir "resources/public/out/min/js/"
+                           :externs ["./js/preact.ext.js" "./js/preact-compat.ext.js"]
+                           :foreign-libs
+                           [{:file "./node_modules/preact/dist/preact.js"
+                             :file-min "./node_modules/preact/dist/preact.min.js"
+                             :provides ["preact"]}
+                            {:file "./node_modules/prop-types/prop-types.js"
+                             :file-min "./node_modules/prop-types/prop-types.min.js"
+                             :provides ["prop-types"]}
+                            {:file "./node_modules/preact-compat/dist/preact-compat.js"
+                             :file-min "./node_modules/preact-compat/dist/preact-compat.min.js"
+                             :requires ["preact" "prop-types"]
+                             :provides ["react" "react-dom" "create-react-class"]
+                             :global-exports {create-react-class preactCompat.createClass
+                                              react-dom preactCompat
+                                              react preactCompat}}]}}}})
